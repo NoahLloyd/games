@@ -3,21 +3,13 @@ const text = document.getElementById("text");
 const playAgain = document.getElementById("playAgain");
 let player = "X";
 
+playAgain.addEventListener("click", () => location.reload());
+
 const newGame = () => {
   playAgain.classList.add("hidden");
-  player = "X";
   columns.forEach((column) => {
-    column.innerHTML = "-";
     column.addEventListener("click", () => {
-      win = clickOnColumn(column);
-      if (win) {
-        // Gets rid of the event listeners 
-        // and with that disables clicking on other boxes
-        columns.forEach((col) => {
-          const colCopy = col.cloneNode(true);
-          col.parentNode.replaceChild(colCopy, col);
-        });
-      }
+      clickOnColumn(column);
     });
   });
 };
@@ -25,21 +17,20 @@ newGame();
 
 const clickOnColumn = (column) => {
   const nextPlayer = player === "X" ? "O" : "X";
-  if (column.innerText === "-") {
+  if (column.innerHTML === "&nbsp;") {
     column.innerHTML = player;
     player = nextPlayer;
-    text.innerHTML = `Your turn, player ${player}`;
-    win = checkForWin();
+    text.innerText = `Your turn, player ${player}`;
+    checkForWin();
   } else {
     text.innerText = "You cannot click there!";
   }
-  return win;
 };
 const checkForWin = () => {
   // Makes a 2d array of how the board looks
   let board = [];
   [0, 1, 2].forEach((row) => {
-    const startIndex = +row * 3;
+    const startIndex = row * 3;
     board = [
       ...board,
       [
@@ -49,15 +40,22 @@ const checkForWin = () => {
       ],
     ];
   });
-  if (checkBoard(board, "X")) {
-    handleWin("X");
-    return "X";
+  xWin = checkBoard(board, "X");
+  oWin = checkBoard(board, "O");
+  if (xWin) {
+    if (xWin === "tie") {
+      handleTie();
+    } else {
+      handleWin("X");
+        }
   }
-  if (checkBoard(board, "O")) {
-    handleWin("O");
-    return "O";
+  if (oWin) {
+    if (oWin === "tie") {
+      handleTie();
+    } else {
+      handleWin("O");
+    }
   }
-  return false;
 };
 
 const checkBoard = (board, player) => {
@@ -76,9 +74,23 @@ const checkBoard = (board, player) => {
   if (player3 === board[0][2] + board[1][1] + board[2][0]) winner = player;
   if (winner === player) {
   }
-  return winner === player ? true : false;
+  let tie = true;
+  board.forEach((row) => {
+    row.forEach((col) => {
+      if (col !== "X" && col !== "O") tie = false;
+    });
+  });
+  if (winner === player) {
+    return true;
+  } else {
+    return tie ? "tie" : false;
+  }
 };
 const handleWin = (winner) => {
   text.innerText = `Congrats ${winner}!`;
+  playAgain.classList.remove("hidden");
+};
+const handleTie = () => {
+  text.innerText = "It was a tie!";
   playAgain.classList.remove("hidden");
 };
