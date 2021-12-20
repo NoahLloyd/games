@@ -103,17 +103,18 @@ const loss = () => {
     canvas.addEventListener('click', event => {
         const mousePos = getMousePos(canvas, event);
         if (isInside(mousePos, playAgainButton)) {
-            speed = 7;
-            headX = (canvas.width + canvas.height) / 80;
-            headY = (canvas.width + canvas.height) / 80;
-            xVelocity = 0;
-            yVelocity = 0;
+            // speed = 7;
+            // headX = (canvas.width + canvas.height) / 80;
+            // headY = (canvas.width + canvas.height) / 80;
+            // xVelocity = 0;
+            // yVelocity = 0;
 
-            score = 0;
+            // score = 0;
 
-            snakeParts = [];
-            tailLength = 2;
-            drawGame();
+            // snakeParts = [];
+            // tailLength = 2;
+            // drawGame();
+            location.reload()
         }
     }, false)
 }

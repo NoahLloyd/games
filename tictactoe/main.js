@@ -19,6 +19,7 @@ const clickOnColumn = (column) => {
   const nextPlayer = player === "X" ? "O" : "X";
   if (column.innerHTML === "&nbsp;") {
     column.innerHTML = player;
+    column.classList.add('col-show')
     player = nextPlayer;
     text.innerText = `Your turn, player ${player}`;
     checkForWin();
@@ -47,7 +48,7 @@ const checkForWin = () => {
       handleTie();
     } else {
       handleWin("X");
-        }
+    }
   }
   if (oWin) {
     if (oWin === "tie") {
@@ -88,9 +89,18 @@ const checkBoard = (board, player) => {
 };
 const handleWin = (winner) => {
   text.innerText = `Congrats ${winner}!`;
-  playAgain.classList.remove("hidden");
+  endOfGame()
 };
 const handleTie = () => {
   text.innerText = "It was a tie!";
+  endOfGame()
+};
+const endOfGame = () => {
   playAgain.classList.remove("hidden");
+
+  // Removes the event listeners from the boxes
+  columns.forEach((column) => {
+    copyCol = column.cloneNode(true);
+    column.parentNode.replaceChild(copyCol, column);
+  });
 };
